@@ -3,9 +3,12 @@
 package support
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awsutil"
 	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/private/protocol"
 )
 
 const opAddAttachmentsToSet = "AddAttachmentsToSet"
@@ -24,14 +27,13 @@ const opAddAttachmentsToSet = "AddAttachmentsToSet"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the AddAttachmentsToSetRequest method.
+//	req, resp := client.AddAttachmentsToSetRequest(params)
 //
-//    // Example sending a request using the AddAttachmentsToSetRequest method.
-//    req, resp := client.AddAttachmentsToSetRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/AddAttachmentsToSet
 func (c *Support) AddAttachmentsToSetRequest(input *AddAttachmentsToSetInput) (req *request.Request, output *AddAttachmentsToSetOutput) {
@@ -52,16 +54,19 @@ func (c *Support) AddAttachmentsToSetRequest(input *AddAttachmentsToSetInput) (r
 
 // AddAttachmentsToSet API operation for AWS Support.
 //
-// Adds one or more attachments to an attachment set. If an attachmentSetId
-// is not specified, a new attachment set is created, and the ID of the set
-// is returned in the response. If an attachmentSetId is specified, the attachments
-// are added to the specified set, if it exists.
+// Adds one or more attachments to an attachment set.
 //
-// An attachment set is a temporary container for attachments that are to be
-// added to a case or case communication. The set is available for one hour
-// after it is created; the expiryTime returned in the response indicates when
-// the set expires. The maximum number of attachments in a set is 3, and the
-// maximum size of any attachment in the set is 5 MB.
+// An attachment set is a temporary container for attachments that you add to
+// a case or case communication. The set is available for 1 hour after it's
+// created. The expiryTime returned in the response is when the set expires.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -70,24 +75,25 @@ func (c *Support) AddAttachmentsToSetRequest(input *AddAttachmentsToSetInput) (r
 // See the AWS API reference guide for AWS Support's
 // API operation AddAttachmentsToSet for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
 //
-//   * ErrCodeAttachmentSetIdNotFound "AttachmentSetIdNotFound"
-//   An attachment set with the specified ID could not be found.
+//   - InternalServerError
+//     An internal server error occurred.
 //
-//   * ErrCodeAttachmentSetExpired "AttachmentSetExpired"
-//   The expiration time of the attachment set has passed. The set expires 1 hour
-//   after it is created.
+//   - AttachmentSetIdNotFound
+//     An attachment set with the specified ID could not be found.
 //
-//   * ErrCodeAttachmentSetSizeLimitExceeded "AttachmentSetSizeLimitExceeded"
-//   A limit for the size of an attachment set has been exceeded. The limits are
-//   3 attachments and 5 MB per attachment.
+//   - AttachmentSetExpired
+//     The expiration time of the attachment set has passed. The set expires 1 hour
+//     after it is created.
 //
-//   * ErrCodeAttachmentLimitExceeded "AttachmentLimitExceeded"
-//   The limit for the number of attachment sets created in a short period of
-//   time has been exceeded.
+//   - AttachmentSetSizeLimitExceeded
+//     A limit for the size of an attachment set has been exceeded. The limits are
+//     three attachments and 5 MB per attachment.
+//
+//   - AttachmentLimitExceeded
+//     The limit for the number of attachment sets created in a short period of
+//     time has been exceeded.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/AddAttachmentsToSet
 func (c *Support) AddAttachmentsToSet(input *AddAttachmentsToSetInput) (*AddAttachmentsToSetOutput, error) {
@@ -127,14 +133,13 @@ const opAddCommunicationToCase = "AddCommunicationToCase"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the AddCommunicationToCaseRequest method.
+//	req, resp := client.AddCommunicationToCaseRequest(params)
 //
-//    // Example sending a request using the AddCommunicationToCaseRequest method.
-//    req, resp := client.AddCommunicationToCaseRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/AddCommunicationToCase
 func (c *Support) AddCommunicationToCaseRequest(input *AddCommunicationToCaseInput) (req *request.Request, output *AddCommunicationToCaseOutput) {
@@ -155,14 +160,19 @@ func (c *Support) AddCommunicationToCaseRequest(input *AddCommunicationToCaseInp
 
 // AddCommunicationToCase API operation for AWS Support.
 //
-// Adds additional customer communication to an AWS Support case. You use the
-// caseId value to identify the case to add communication to. You can list a
-// set of email addresses to copy on the communication using the ccEmailAddresses
-// value. The communicationBody value contains the text of the communication.
+// Adds additional customer communication to an Amazon Web Services Support
+// case. Use the caseId parameter to identify the case to which to add communication.
+// You can list a set of email addresses to copy on the communication by using
+// the ccEmailAddresses parameter. The communicationBody value contains the
+// text of the communication.
 //
-// The response indicates the success or failure of the request.
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
 //
-// This operation implements a subset of the features of the AWS Support Center.
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -171,19 +181,20 @@ func (c *Support) AddCommunicationToCaseRequest(input *AddCommunicationToCaseInp
 // See the AWS API reference guide for AWS Support's
 // API operation AddCommunicationToCase for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
 //
-//   * ErrCodeCaseIdNotFound "CaseIdNotFound"
-//   The requested caseId could not be located.
+//   - InternalServerError
+//     An internal server error occurred.
 //
-//   * ErrCodeAttachmentSetIdNotFound "AttachmentSetIdNotFound"
-//   An attachment set with the specified ID could not be found.
+//   - CaseIdNotFound
+//     The requested caseId couldn't be located.
 //
-//   * ErrCodeAttachmentSetExpired "AttachmentSetExpired"
-//   The expiration time of the attachment set has passed. The set expires 1 hour
-//   after it is created.
+//   - AttachmentSetIdNotFound
+//     An attachment set with the specified ID could not be found.
+//
+//   - AttachmentSetExpired
+//     The expiration time of the attachment set has passed. The set expires 1 hour
+//     after it is created.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/AddCommunicationToCase
 func (c *Support) AddCommunicationToCase(input *AddCommunicationToCaseInput) (*AddCommunicationToCaseOutput, error) {
@@ -223,14 +234,13 @@ const opCreateCase = "CreateCase"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the CreateCaseRequest method.
+//	req, resp := client.CreateCaseRequest(params)
 //
-//    // Example sending a request using the CreateCaseRequest method.
-//    req, resp := client.CreateCaseRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/CreateCase
 func (c *Support) CreateCaseRequest(input *CreateCaseInput) (req *request.Request, output *CreateCaseOutput) {
@@ -251,48 +261,36 @@ func (c *Support) CreateCaseRequest(input *CreateCaseInput) (req *request.Reques
 
 // CreateCase API operation for AWS Support.
 //
-// Creates a new case in the AWS Support Center. This operation is modeled on
-// the behavior of the AWS Support Center Create Case (https://console.aws.amazon.com/support/home#/case/create)
-// page. Its parameters require you to specify the following information:
+// Creates a case in the Amazon Web Services Support Center. This operation
+// is similar to how you create a case in the Amazon Web Services Support Center
+// Create Case (https://console.aws.amazon.com/support/home#/case/create) page.
 //
-//    * issueType. The type of issue for the case. You can specify either "customer-service"
-//    or "technical." If you do not indicate a value, the default is "technical."
+// The Amazon Web Services Support API doesn't support requesting service limit
+// increases. You can submit a service limit increase in the following ways:
 //
-//    * serviceCode. The code for an AWS service. You obtain the serviceCode
-//    by calling DescribeServices.
+//   - Submit a request from the Amazon Web Services Support Center Create
+//     Case (https://console.aws.amazon.com/support/home#/case/create) page.
 //
-//    * categoryCode. The category for the service defined for the serviceCode
-//    value. You also obtain the category code for a service by calling DescribeServices.
-//    Each AWS service defines its own set of category codes.
+//   - Use the Service Quotas RequestServiceQuotaIncrease (https://docs.aws.amazon.com/servicequotas/2019-06-24/apireference/API_RequestServiceQuotaIncrease.html)
+//     operation.
 //
-//    * severityCode. A value that indicates the urgency of the case, which
-//    in turn determines the response time according to your service level agreement
-//    with AWS Support. You obtain the SeverityCode by calling DescribeSeverityLevels.
+// A successful CreateCase request returns an Amazon Web Services Support case
+// number. You can use the DescribeCases operation and specify the case number
+// to get existing Amazon Web Services Support cases. After you create a case,
+// use the AddCommunicationToCase operation to add additional communication
+// or attachments to an existing case.
 //
-//    * subject. The Subject field on the AWS Support Center Create Case (https://console.aws.amazon.com/support/home#/case/create)
-//    page.
+// The caseId is separate from the displayId that appears in the Amazon Web
+// Services Support Center (https://console.aws.amazon.com/support). Use the
+// DescribeCases operation to get the displayId.
 //
-//    * communicationBody. The Description field on the AWS Support Center Create
-//    Case (https://console.aws.amazon.com/support/home#/case/create) page.
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
 //
-//    * attachmentSetId. The ID of a set of attachments that has been created
-//    by using AddAttachmentsToSet.
-//
-//    * language. The human language in which AWS Support handles the case.
-//    English and Japanese are currently supported.
-//
-//    * ccEmailAddresses. The AWS Support Center CC field on the Create Case
-//    (https://console.aws.amazon.com/support/home#/case/create) page. You can
-//    list email addresses to be copied on any correspondence about the case.
-//    The account that opens the case is already identified by passing the AWS
-//    Credentials in the HTTP POST method or in a method or function call from
-//    one of the programming languages supported by an AWS SDK (http://aws.amazon.com/tools/).
-//
-// To add additional communication or attachments to an existing case, use AddCommunicationToCase.
-//
-// A successful CreateCase request returns an AWS Support case number. Case
-// numbers are used by the DescribeCases operation to retrieve existing AWS
-// Support cases.
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -301,19 +299,20 @@ func (c *Support) CreateCaseRequest(input *CreateCaseInput) (req *request.Reques
 // See the AWS API reference guide for AWS Support's
 // API operation CreateCase for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
 //
-//   * ErrCodeCaseCreationLimitExceeded "CaseCreationLimitExceeded"
-//   The case creation limit for the account has been exceeded.
+//   - InternalServerError
+//     An internal server error occurred.
 //
-//   * ErrCodeAttachmentSetIdNotFound "AttachmentSetIdNotFound"
-//   An attachment set with the specified ID could not be found.
+//   - CaseCreationLimitExceeded
+//     The case creation limit for the account has been exceeded.
 //
-//   * ErrCodeAttachmentSetExpired "AttachmentSetExpired"
-//   The expiration time of the attachment set has passed. The set expires 1 hour
-//   after it is created.
+//   - AttachmentSetIdNotFound
+//     An attachment set with the specified ID could not be found.
+//
+//   - AttachmentSetExpired
+//     The expiration time of the attachment set has passed. The set expires 1 hour
+//     after it is created.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/CreateCase
 func (c *Support) CreateCase(input *CreateCaseInput) (*CreateCaseOutput, error) {
@@ -353,14 +352,13 @@ const opDescribeAttachment = "DescribeAttachment"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeAttachmentRequest method.
+//	req, resp := client.DescribeAttachmentRequest(params)
 //
-//    // Example sending a request using the DescribeAttachmentRequest method.
-//    req, resp := client.DescribeAttachmentRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeAttachment
 func (c *Support) DescribeAttachmentRequest(input *DescribeAttachmentInput) (req *request.Request, output *DescribeAttachmentOutput) {
@@ -381,10 +379,19 @@ func (c *Support) DescribeAttachmentRequest(input *DescribeAttachmentInput) (req
 
 // DescribeAttachment API operation for AWS Support.
 //
-// Returns the attachment that has the specified ID. Attachment IDs are generated
-// by the case management system when you add an attachment to a case or case
-// communication. Attachment IDs are returned in the AttachmentDetails objects
-// that are returned by the DescribeCommunications operation.
+// Returns the attachment that has the specified ID. Attachments can include
+// screenshots, error logs, or other files that describe your issue. Attachment
+// IDs are generated by the case management system when you add an attachment
+// to a case or case communication. Attachment IDs are returned in the AttachmentDetails
+// objects that are returned by the DescribeCommunications operation.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -393,16 +400,17 @@ func (c *Support) DescribeAttachmentRequest(input *DescribeAttachmentInput) (req
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeAttachment for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
 //
-//   * ErrCodeDescribeAttachmentLimitExceeded "DescribeAttachmentLimitExceeded"
-//   The limit for the number of DescribeAttachment requests in a short period
-//   of time has been exceeded.
+//   - InternalServerError
+//     An internal server error occurred.
 //
-//   * ErrCodeAttachmentIdNotFound "AttachmentIdNotFound"
-//   An attachment with the specified ID could not be found.
+//   - DescribeAttachmentLimitExceeded
+//     The limit for the number of DescribeAttachment requests in a short period
+//     of time has been exceeded.
+//
+//   - AttachmentIdNotFound
+//     An attachment with the specified ID could not be found.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeAttachment
 func (c *Support) DescribeAttachment(input *DescribeAttachmentInput) (*DescribeAttachmentOutput, error) {
@@ -442,14 +450,13 @@ const opDescribeCases = "DescribeCases"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeCasesRequest method.
+//	req, resp := client.DescribeCasesRequest(params)
 //
-//    // Example sending a request using the DescribeCasesRequest method.
-//    req, resp := client.DescribeCasesRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeCases
 func (c *Support) DescribeCasesRequest(input *DescribeCasesInput) (req *request.Request, output *DescribeCasesOutput) {
@@ -477,20 +484,28 @@ func (c *Support) DescribeCasesRequest(input *DescribeCasesInput) (req *request.
 // DescribeCases API operation for AWS Support.
 //
 // Returns a list of cases that you specify by passing one or more case IDs.
-// In addition, you can filter the cases by date by setting values for the afterTime
-// and beforeTime request parameters. You can set values for the includeResolvedCases
-// and includeCommunications request parameters to control how much information
-// is returned.
-//
-// Case data is available for 12 months after creation. If a case was created
-// more than 12 months ago, a request for data might cause an error.
+// You can use the afterTime and beforeTime parameters to filter the cases by
+// date. You can set values for the includeResolvedCases and includeCommunications
+// parameters to specify how much information to return.
 //
 // The response returns the following in JSON format:
 //
-//    * One or more CaseDetails data types.
+//   - One or more CaseDetails (https://docs.aws.amazon.com/awssupport/latest/APIReference/API_CaseDetails.html)
+//     data types.
 //
-//    * One or more nextToken values, which specify where to paginate the returned
-//    records represented by the CaseDetails objects.
+//   - One or more nextToken values, which specify where to paginate the returned
+//     records represented by the CaseDetails objects.
+//
+// Case data is available for 12 months after creation. If a case was created
+// more than 12 months ago, a request might return an error.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -499,12 +514,13 @@ func (c *Support) DescribeCasesRequest(input *DescribeCasesInput) (req *request.
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeCases for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
 //
-//   * ErrCodeCaseIdNotFound "CaseIdNotFound"
-//   The requested caseId could not be located.
+//   - InternalServerError
+//     An internal server error occurred.
+//
+//   - CaseIdNotFound
+//     The requested caseId couldn't be located.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeCases
 func (c *Support) DescribeCases(input *DescribeCasesInput) (*DescribeCasesOutput, error) {
@@ -536,15 +552,14 @@ func (c *Support) DescribeCasesWithContext(ctx aws.Context, input *DescribeCases
 //
 // Note: This operation can generate multiple requests to a service.
 //
-//    // Example iterating over at most 3 pages of a DescribeCases operation.
-//    pageNum := 0
-//    err := client.DescribeCasesPages(params,
-//        func(page *support.DescribeCasesOutput, lastPage bool) bool {
-//            pageNum++
-//            fmt.Println(page)
-//            return pageNum <= 3
-//        })
-//
+//	// Example iterating over at most 3 pages of a DescribeCases operation.
+//	pageNum := 0
+//	err := client.DescribeCasesPages(params,
+//	    func(page *support.DescribeCasesOutput, lastPage bool) bool {
+//	        pageNum++
+//	        fmt.Println(page)
+//	        return pageNum <= 3
+//	    })
 func (c *Support) DescribeCasesPages(input *DescribeCasesInput, fn func(*DescribeCasesOutput, bool) bool) error {
 	return c.DescribeCasesPagesWithContext(aws.BackgroundContext(), input, fn)
 }
@@ -571,10 +586,12 @@ func (c *Support) DescribeCasesPagesWithContext(ctx aws.Context, input *Describe
 		},
 	}
 
-	cont := true
-	for p.Next() && cont {
-		cont = fn(p.Page().(*DescribeCasesOutput), !p.HasNextPage())
+	for p.Next() {
+		if !fn(p.Page().(*DescribeCasesOutput), !p.HasNextPage()) {
+			break
+		}
 	}
+
 	return p.Err()
 }
 
@@ -594,14 +611,13 @@ const opDescribeCommunications = "DescribeCommunications"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeCommunicationsRequest method.
+//	req, resp := client.DescribeCommunicationsRequest(params)
 //
-//    // Example sending a request using the DescribeCommunicationsRequest method.
-//    req, resp := client.DescribeCommunicationsRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeCommunications
 func (c *Support) DescribeCommunicationsRequest(input *DescribeCommunicationsInput) (req *request.Request, output *DescribeCommunicationsOutput) {
@@ -628,16 +644,24 @@ func (c *Support) DescribeCommunicationsRequest(input *DescribeCommunicationsInp
 
 // DescribeCommunications API operation for AWS Support.
 //
-// Returns communications (and attachments) for one or more support cases. You
-// can use the afterTime and beforeTime parameters to filter by date. You can
-// use the caseId parameter to restrict the results to a particular case.
+// Returns communications and attachments for one or more support cases. Use
+// the afterTime and beforeTime parameters to filter by date. You can use the
+// caseId parameter to restrict the results to a specific case.
 //
 // Case data is available for 12 months after creation. If a case was created
 // more than 12 months ago, a request for data might cause an error.
 //
 // You can use the maxResults and nextToken parameters to control the pagination
-// of the result set. Set maxResults to the number of cases you want displayed
+// of the results. Set maxResults to the number of cases that you want to display
 // on each page, and use nextToken to specify the resumption of pagination.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -646,12 +670,13 @@ func (c *Support) DescribeCommunicationsRequest(input *DescribeCommunicationsInp
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeCommunications for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
 //
-//   * ErrCodeCaseIdNotFound "CaseIdNotFound"
-//   The requested caseId could not be located.
+//   - InternalServerError
+//     An internal server error occurred.
+//
+//   - CaseIdNotFound
+//     The requested caseId couldn't be located.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeCommunications
 func (c *Support) DescribeCommunications(input *DescribeCommunicationsInput) (*DescribeCommunicationsOutput, error) {
@@ -683,15 +708,14 @@ func (c *Support) DescribeCommunicationsWithContext(ctx aws.Context, input *Desc
 //
 // Note: This operation can generate multiple requests to a service.
 //
-//    // Example iterating over at most 3 pages of a DescribeCommunications operation.
-//    pageNum := 0
-//    err := client.DescribeCommunicationsPages(params,
-//        func(page *support.DescribeCommunicationsOutput, lastPage bool) bool {
-//            pageNum++
-//            fmt.Println(page)
-//            return pageNum <= 3
-//        })
-//
+//	// Example iterating over at most 3 pages of a DescribeCommunications operation.
+//	pageNum := 0
+//	err := client.DescribeCommunicationsPages(params,
+//	    func(page *support.DescribeCommunicationsOutput, lastPage bool) bool {
+//	        pageNum++
+//	        fmt.Println(page)
+//	        return pageNum <= 3
+//	    })
 func (c *Support) DescribeCommunicationsPages(input *DescribeCommunicationsInput, fn func(*DescribeCommunicationsOutput, bool) bool) error {
 	return c.DescribeCommunicationsPagesWithContext(aws.BackgroundContext(), input, fn)
 }
@@ -718,10 +742,12 @@ func (c *Support) DescribeCommunicationsPagesWithContext(ctx aws.Context, input 
 		},
 	}
 
-	cont := true
-	for p.Next() && cont {
-		cont = fn(p.Page().(*DescribeCommunicationsOutput), !p.HasNextPage())
+	for p.Next() {
+		if !fn(p.Page().(*DescribeCommunicationsOutput), !p.HasNextPage()) {
+			break
+		}
 	}
+
 	return p.Err()
 }
 
@@ -741,14 +767,13 @@ const opDescribeServices = "DescribeServices"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeServicesRequest method.
+//	req, resp := client.DescribeServicesRequest(params)
 //
-//    // Example sending a request using the DescribeServicesRequest method.
-//    req, resp := client.DescribeServicesRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeServices
 func (c *Support) DescribeServicesRequest(input *DescribeServicesInput) (req *request.Request, output *DescribeServicesOutput) {
@@ -769,17 +794,26 @@ func (c *Support) DescribeServicesRequest(input *DescribeServicesInput) (req *re
 
 // DescribeServices API operation for AWS Support.
 //
-// Returns the current list of AWS services and a list of service categories
-// that applies to each one. You then use service names and categories in your
-// CreateCase requests. Each AWS service has its own set of categories.
+// Returns the current list of Amazon Web Services services and a list of service
+// categories for each service. You then use service names and categories in
+// your CreateCase requests. Each Amazon Web Services service has its own set
+// of categories.
 //
-// The service codes and category codes correspond to the values that are displayed
-// in the Service and Category drop-down lists on the AWS Support Center Create
-// Case (https://console.aws.amazon.com/support/home#/case/create) page. The
-// values in those fields, however, do not necessarily match the service codes
-// and categories returned by the DescribeServices request. Always use the service
-// codes and categories obtained programmatically. This practice ensures that
-// you always have the most recent set of service and category codes.
+// The service codes and category codes correspond to the values that appear
+// in the Service and Category lists on the Amazon Web Services Support Center
+// Create Case (https://console.aws.amazon.com/support/home#/case/create) page.
+// The values in those fields don't necessarily match the service codes and
+// categories returned by the DescribeServices operation. Always use the service
+// codes and categories that the DescribeServices operation returns, so that
+// you have the most recent set of service and category codes.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -788,9 +822,9 @@ func (c *Support) DescribeServicesRequest(input *DescribeServicesInput) (req *re
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeServices for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
+//   - InternalServerError
+//     An internal server error occurred.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeServices
 func (c *Support) DescribeServices(input *DescribeServicesInput) (*DescribeServicesOutput, error) {
@@ -830,14 +864,13 @@ const opDescribeSeverityLevels = "DescribeSeverityLevels"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeSeverityLevelsRequest method.
+//	req, resp := client.DescribeSeverityLevelsRequest(params)
 //
-//    // Example sending a request using the DescribeSeverityLevelsRequest method.
-//    req, resp := client.DescribeSeverityLevelsRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeSeverityLevels
 func (c *Support) DescribeSeverityLevelsRequest(input *DescribeSeverityLevelsInput) (req *request.Request, output *DescribeSeverityLevelsOutput) {
@@ -858,9 +891,17 @@ func (c *Support) DescribeSeverityLevelsRequest(input *DescribeSeverityLevelsInp
 
 // DescribeSeverityLevels API operation for AWS Support.
 //
-// Returns the list of severity levels that you can assign to an AWS Support
-// case. The severity level for a case is also a field in the CaseDetails data
-// type included in any CreateCase request.
+// Returns the list of severity levels that you can assign to a support case.
+// The severity level for a case is also a field in the CaseDetails data type
+// that you include for a CreateCase request.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -869,9 +910,9 @@ func (c *Support) DescribeSeverityLevelsRequest(input *DescribeSeverityLevelsInp
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeSeverityLevels for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
+//   - InternalServerError
+//     An internal server error occurred.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeSeverityLevels
 func (c *Support) DescribeSeverityLevels(input *DescribeSeverityLevelsInput) (*DescribeSeverityLevelsOutput, error) {
@@ -911,14 +952,13 @@ const opDescribeTrustedAdvisorCheckRefreshStatuses = "DescribeTrustedAdvisorChec
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeTrustedAdvisorCheckRefreshStatusesRequest method.
+//	req, resp := client.DescribeTrustedAdvisorCheckRefreshStatusesRequest(params)
 //
-//    // Example sending a request using the DescribeTrustedAdvisorCheckRefreshStatusesRequest method.
-//    req, resp := client.DescribeTrustedAdvisorCheckRefreshStatusesRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeTrustedAdvisorCheckRefreshStatuses
 func (c *Support) DescribeTrustedAdvisorCheckRefreshStatusesRequest(input *DescribeTrustedAdvisorCheckRefreshStatusesInput) (req *request.Request, output *DescribeTrustedAdvisorCheckRefreshStatusesOutput) {
@@ -940,11 +980,21 @@ func (c *Support) DescribeTrustedAdvisorCheckRefreshStatusesRequest(input *Descr
 // DescribeTrustedAdvisorCheckRefreshStatuses API operation for AWS Support.
 //
 // Returns the refresh status of the Trusted Advisor checks that have the specified
-// check IDs. Check IDs can be obtained by calling DescribeTrustedAdvisorChecks.
+// check IDs. You can get the check IDs by calling the DescribeTrustedAdvisorChecks
+// operation.
 //
-// Some checks are refreshed automatically, and their refresh statuses cannot
-// be retrieved by using this operation. Use of the DescribeTrustedAdvisorCheckRefreshStatuses
-// operation for these checks causes an InvalidParameterValue error.
+// Some checks are refreshed automatically, and you can't return their refresh
+// statuses by using the DescribeTrustedAdvisorCheckRefreshStatuses operation.
+// If you call this operation for these checks, you might see an InvalidParameterValue
+// error.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -953,9 +1003,9 @@ func (c *Support) DescribeTrustedAdvisorCheckRefreshStatusesRequest(input *Descr
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeTrustedAdvisorCheckRefreshStatuses for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
+//   - InternalServerError
+//     An internal server error occurred.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeTrustedAdvisorCheckRefreshStatuses
 func (c *Support) DescribeTrustedAdvisorCheckRefreshStatuses(input *DescribeTrustedAdvisorCheckRefreshStatusesInput) (*DescribeTrustedAdvisorCheckRefreshStatusesOutput, error) {
@@ -995,14 +1045,13 @@ const opDescribeTrustedAdvisorCheckResult = "DescribeTrustedAdvisorCheckResult"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeTrustedAdvisorCheckResultRequest method.
+//	req, resp := client.DescribeTrustedAdvisorCheckResultRequest(params)
 //
-//    // Example sending a request using the DescribeTrustedAdvisorCheckResultRequest method.
-//    req, resp := client.DescribeTrustedAdvisorCheckResultRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeTrustedAdvisorCheckResult
 func (c *Support) DescribeTrustedAdvisorCheckResultRequest(input *DescribeTrustedAdvisorCheckResultInput) (req *request.Request, output *DescribeTrustedAdvisorCheckResultOutput) {
@@ -1024,25 +1073,34 @@ func (c *Support) DescribeTrustedAdvisorCheckResultRequest(input *DescribeTruste
 // DescribeTrustedAdvisorCheckResult API operation for AWS Support.
 //
 // Returns the results of the Trusted Advisor check that has the specified check
-// ID. Check IDs can be obtained by calling DescribeTrustedAdvisorChecks.
+// ID. You can get the check IDs by calling the DescribeTrustedAdvisorChecks
+// operation.
 //
 // The response contains a TrustedAdvisorCheckResult object, which contains
 // these three objects:
 //
-//    * TrustedAdvisorCategorySpecificSummary
+//   - TrustedAdvisorCategorySpecificSummary
 //
-//    * TrustedAdvisorResourceDetail
+//   - TrustedAdvisorResourceDetail
 //
-//    * TrustedAdvisorResourcesSummary
+//   - TrustedAdvisorResourcesSummary
 //
 // In addition, the response contains these fields:
 //
-//    * status. The alert status of the check: "ok" (green), "warning" (yellow),
-//    "error" (red), or "not_available".
+//   - status - The alert status of the check can be ok (green), warning (yellow),
+//     error (red), or not_available.
 //
-//    * timestamp. The time of the last refresh of the check.
+//   - timestamp - The time of the last refresh of the check.
 //
-//    * checkId. The unique identifier for the check.
+//   - checkId - The unique identifier for the check.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1051,9 +1109,9 @@ func (c *Support) DescribeTrustedAdvisorCheckResultRequest(input *DescribeTruste
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeTrustedAdvisorCheckResult for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
+//   - InternalServerError
+//     An internal server error occurred.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeTrustedAdvisorCheckResult
 func (c *Support) DescribeTrustedAdvisorCheckResult(input *DescribeTrustedAdvisorCheckResultInput) (*DescribeTrustedAdvisorCheckResultOutput, error) {
@@ -1093,14 +1151,13 @@ const opDescribeTrustedAdvisorCheckSummaries = "DescribeTrustedAdvisorCheckSumma
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeTrustedAdvisorCheckSummariesRequest method.
+//	req, resp := client.DescribeTrustedAdvisorCheckSummariesRequest(params)
 //
-//    // Example sending a request using the DescribeTrustedAdvisorCheckSummariesRequest method.
-//    req, resp := client.DescribeTrustedAdvisorCheckSummariesRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeTrustedAdvisorCheckSummaries
 func (c *Support) DescribeTrustedAdvisorCheckSummariesRequest(input *DescribeTrustedAdvisorCheckSummariesInput) (req *request.Request, output *DescribeTrustedAdvisorCheckSummariesOutput) {
@@ -1121,10 +1178,19 @@ func (c *Support) DescribeTrustedAdvisorCheckSummariesRequest(input *DescribeTru
 
 // DescribeTrustedAdvisorCheckSummaries API operation for AWS Support.
 //
-// Returns the summaries of the results of the Trusted Advisor checks that have
-// the specified check IDs. Check IDs can be obtained by calling DescribeTrustedAdvisorChecks.
+// Returns the results for the Trusted Advisor check summaries for the check
+// IDs that you specified. You can get the check IDs by calling the DescribeTrustedAdvisorChecks
+// operation.
 //
 // The response contains an array of TrustedAdvisorCheckSummary objects.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1133,9 +1199,9 @@ func (c *Support) DescribeTrustedAdvisorCheckSummariesRequest(input *DescribeTru
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeTrustedAdvisorCheckSummaries for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
+//   - InternalServerError
+//     An internal server error occurred.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeTrustedAdvisorCheckSummaries
 func (c *Support) DescribeTrustedAdvisorCheckSummaries(input *DescribeTrustedAdvisorCheckSummariesInput) (*DescribeTrustedAdvisorCheckSummariesOutput, error) {
@@ -1175,14 +1241,13 @@ const opDescribeTrustedAdvisorChecks = "DescribeTrustedAdvisorChecks"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DescribeTrustedAdvisorChecksRequest method.
+//	req, resp := client.DescribeTrustedAdvisorChecksRequest(params)
 //
-//    // Example sending a request using the DescribeTrustedAdvisorChecksRequest method.
-//    req, resp := client.DescribeTrustedAdvisorChecksRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeTrustedAdvisorChecks
 func (c *Support) DescribeTrustedAdvisorChecksRequest(input *DescribeTrustedAdvisorChecksInput) (req *request.Request, output *DescribeTrustedAdvisorChecksOutput) {
@@ -1204,9 +1269,22 @@ func (c *Support) DescribeTrustedAdvisorChecksRequest(input *DescribeTrustedAdvi
 // DescribeTrustedAdvisorChecks API operation for AWS Support.
 //
 // Returns information about all available Trusted Advisor checks, including
-// name, ID, category, description, and metadata. You must specify a language
-// code; English ("en") and Japanese ("ja") are currently supported. The response
-// contains a TrustedAdvisorCheckDescription for each check.
+// the name, ID, category, description, and metadata. You must specify a language
+// code. The Amazon Web Services Support API currently supports English ("en")
+// and Japanese ("ja"). The response contains a TrustedAdvisorCheckDescription
+// object for each check. You must set the Amazon Web Services Region to us-east-1.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
+//
+//   - The names and descriptions for Trusted Advisor checks are subject to
+//     change. We recommend that you specify the check ID in your code to uniquely
+//     identify a check.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1215,9 +1293,9 @@ func (c *Support) DescribeTrustedAdvisorChecksRequest(input *DescribeTrustedAdvi
 // See the AWS API reference guide for AWS Support's
 // API operation DescribeTrustedAdvisorChecks for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
+//   - InternalServerError
+//     An internal server error occurred.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/DescribeTrustedAdvisorChecks
 func (c *Support) DescribeTrustedAdvisorChecks(input *DescribeTrustedAdvisorChecksInput) (*DescribeTrustedAdvisorChecksOutput, error) {
@@ -1257,14 +1335,13 @@ const opRefreshTrustedAdvisorCheck = "RefreshTrustedAdvisorCheck"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the RefreshTrustedAdvisorCheckRequest method.
+//	req, resp := client.RefreshTrustedAdvisorCheckRequest(params)
 //
-//    // Example sending a request using the RefreshTrustedAdvisorCheckRequest method.
-//    req, resp := client.RefreshTrustedAdvisorCheckRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/RefreshTrustedAdvisorCheck
 func (c *Support) RefreshTrustedAdvisorCheckRequest(input *RefreshTrustedAdvisorCheckInput) (req *request.Request, output *RefreshTrustedAdvisorCheckOutput) {
@@ -1285,23 +1362,21 @@ func (c *Support) RefreshTrustedAdvisorCheckRequest(input *RefreshTrustedAdvisor
 
 // RefreshTrustedAdvisorCheck API operation for AWS Support.
 //
-// Requests a refresh of the Trusted Advisor check that has the specified check
-// ID. Check IDs can be obtained by calling DescribeTrustedAdvisorChecks.
+// Refreshes the Trusted Advisor check that you specify using the check ID.
+// You can get the check IDs by calling the DescribeTrustedAdvisorChecks operation.
 //
-// Some checks are refreshed automatically, and they cannot be refreshed by
-// using this operation. Use of the RefreshTrustedAdvisorCheck operation for
-// these checks causes an InvalidParameterValue error.
+// Some checks are refreshed automatically. If you call the RefreshTrustedAdvisorCheck
+// operation to refresh them, you might see the InvalidParameterValue error.
 //
-// The response contains a TrustedAdvisorCheckRefreshStatus object, which contains
-// these fields:
+// The response contains a TrustedAdvisorCheckRefreshStatus object.
 //
-//    * status. The refresh status of the check: "none", "enqueued", "processing",
-//    "success", or "abandoned".
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
 //
-//    * millisUntilNextRefreshable. The amount of time, in milliseconds, until
-//    the check is eligible for refresh.
-//
-//    * checkId. The unique identifier for the check.
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1310,9 +1385,9 @@ func (c *Support) RefreshTrustedAdvisorCheckRequest(input *RefreshTrustedAdvisor
 // See the AWS API reference guide for AWS Support's
 // API operation RefreshTrustedAdvisorCheck for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
+//   - InternalServerError
+//     An internal server error occurred.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/RefreshTrustedAdvisorCheck
 func (c *Support) RefreshTrustedAdvisorCheck(input *RefreshTrustedAdvisorCheckInput) (*RefreshTrustedAdvisorCheckOutput, error) {
@@ -1352,14 +1427,13 @@ const opResolveCase = "ResolveCase"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the ResolveCaseRequest method.
+//	req, resp := client.ResolveCaseRequest(params)
 //
-//    // Example sending a request using the ResolveCaseRequest method.
-//    req, resp := client.ResolveCaseRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/ResolveCase
 func (c *Support) ResolveCaseRequest(input *ResolveCaseInput) (req *request.Request, output *ResolveCaseOutput) {
@@ -1380,8 +1454,16 @@ func (c *Support) ResolveCaseRequest(input *ResolveCaseInput) (req *request.Requ
 
 // ResolveCase API operation for AWS Support.
 //
-// Takes a caseId and returns the initial state of the case along with the state
-// of the case after the call to ResolveCase completed.
+// Resolves a support case. This operation takes a caseId and returns the initial
+// and final state of the case.
+//
+//   - You must have a Business, Enterprise On-Ramp, or Enterprise Support
+//     plan to use the Amazon Web Services Support API.
+//
+//   - If you call the Amazon Web Services Support API from an account that
+//     does not have a Business, Enterprise On-Ramp, or Enterprise Support plan,
+//     the SubscriptionRequiredException error message appears. For information
+//     about changing your support plan, see Amazon Web Services Support (http://aws.amazon.com/premiumsupport/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1390,12 +1472,13 @@ func (c *Support) ResolveCaseRequest(input *ResolveCaseInput) (req *request.Requ
 // See the AWS API reference guide for AWS Support's
 // API operation ResolveCase for usage and error information.
 //
-// Returned Error Codes:
-//   * ErrCodeInternalServerError "InternalServerError"
-//   An internal server error occurred.
+// Returned Error Types:
 //
-//   * ErrCodeCaseIdNotFound "CaseIdNotFound"
-//   The requested caseId could not be located.
+//   - InternalServerError
+//     An internal server error occurred.
+//
+//   - CaseIdNotFound
+//     The requested caseId couldn't be located.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/support-2013-04-15/ResolveCase
 func (c *Support) ResolveCase(input *ResolveCaseInput) (*ResolveCaseOutput, error) {
@@ -1428,19 +1511,32 @@ type AddAttachmentsToSetInput struct {
 	// set, if it exists.
 	AttachmentSetId *string `locationName:"attachmentSetId" type:"string"`
 
-	// One or more attachments to add to the set. The limit is 3 attachments per
-	// set, and the size limit is 5 MB per attachment.
+	// One or more attachments to add to the set. You can add up to three attachments
+	// per set. The size limit is 5 MB per attachment.
+	//
+	// In the Attachment object, use the data parameter to specify the contents
+	// of the attachment file. In the previous request syntax, the value for data
+	// appear as blob, which is represented as a base64-encoded string. The value
+	// for fileName is the name of the attachment, such as troubleshoot-screenshot.png.
 	//
 	// Attachments is a required field
 	Attachments []*Attachment `locationName:"attachments" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddAttachmentsToSetInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddAttachmentsToSetInput) GoString() string {
 	return s.String()
 }
@@ -1485,12 +1581,20 @@ type AddAttachmentsToSetOutput struct {
 	ExpiryTime *string `locationName:"expiryTime" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddAttachmentsToSetOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddAttachmentsToSetOutput) GoString() string {
 	return s.String()
 }
@@ -1507,7 +1611,6 @@ func (s *AddAttachmentsToSetOutput) SetExpiryTime(v string) *AddAttachmentsToSet
 	return s
 }
 
-// To be written.
 type AddCommunicationToCaseInput struct {
 	_ struct{} `type:"structure"`
 
@@ -1515,8 +1618,8 @@ type AddCommunicationToCaseInput struct {
 	// the case. Create the set by calling AddAttachmentsToSet
 	AttachmentSetId *string `locationName:"attachmentSetId" type:"string"`
 
-	// The AWS Support case ID requested or returned in the call. The case ID is
-	// an alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
+	// The support case ID requested or returned in the call. The case ID is an
+	// alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
 	CaseId *string `locationName:"caseId" type:"string"`
 
 	// The email addresses in the CC line of an email to be added to the support
@@ -1529,12 +1632,20 @@ type AddCommunicationToCaseInput struct {
 	CommunicationBody *string `locationName:"communicationBody" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddCommunicationToCaseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddCommunicationToCaseInput) GoString() string {
 	return s.String()
 }
@@ -1587,12 +1698,20 @@ type AddCommunicationToCaseOutput struct {
 	Result *bool `locationName:"result" type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddCommunicationToCaseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddCommunicationToCaseOutput) GoString() string {
 	return s.String()
 }
@@ -1609,7 +1728,6 @@ type Attachment struct {
 	_ struct{} `type:"structure"`
 
 	// The content of the attachment file.
-	//
 	// Data is automatically base64 encoded/decoded by the SDK.
 	Data []byte `locationName:"data" type:"blob"`
 
@@ -1617,12 +1735,20 @@ type Attachment struct {
 	FileName *string `locationName:"fileName" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Attachment) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Attachment) GoString() string {
 	return s.String()
 }
@@ -1651,12 +1777,20 @@ type AttachmentDetails struct {
 	FileName *string `locationName:"fileName" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AttachmentDetails) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AttachmentDetails) GoString() string {
 	return s.String()
 }
@@ -1673,94 +1807,519 @@ func (s *AttachmentDetails) SetFileName(v string) *AttachmentDetails {
 	return s
 }
 
+// An attachment with the specified ID could not be found.
+type AttachmentIdNotFound struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// An attachment with the specified ID could not be found.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentIdNotFound) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentIdNotFound) GoString() string {
+	return s.String()
+}
+
+func newErrorAttachmentIdNotFound(v protocol.ResponseMetadata) error {
+	return &AttachmentIdNotFound{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *AttachmentIdNotFound) Code() string {
+	return "AttachmentIdNotFound"
+}
+
+// Message returns the exception's message.
+func (s *AttachmentIdNotFound) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *AttachmentIdNotFound) OrigErr() error {
+	return nil
+}
+
+func (s *AttachmentIdNotFound) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *AttachmentIdNotFound) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *AttachmentIdNotFound) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
+// The limit for the number of attachment sets created in a short period of
+// time has been exceeded.
+type AttachmentLimitExceeded struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// The limit for the number of attachment sets created in a short period of
+	// time has been exceeded.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentLimitExceeded) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentLimitExceeded) GoString() string {
+	return s.String()
+}
+
+func newErrorAttachmentLimitExceeded(v protocol.ResponseMetadata) error {
+	return &AttachmentLimitExceeded{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *AttachmentLimitExceeded) Code() string {
+	return "AttachmentLimitExceeded"
+}
+
+// Message returns the exception's message.
+func (s *AttachmentLimitExceeded) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *AttachmentLimitExceeded) OrigErr() error {
+	return nil
+}
+
+func (s *AttachmentLimitExceeded) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *AttachmentLimitExceeded) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *AttachmentLimitExceeded) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
+// The expiration time of the attachment set has passed. The set expires 1 hour
+// after it is created.
+type AttachmentSetExpired struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// The expiration time of the attachment set has passed. The set expires one
+	// hour after it is created.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentSetExpired) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentSetExpired) GoString() string {
+	return s.String()
+}
+
+func newErrorAttachmentSetExpired(v protocol.ResponseMetadata) error {
+	return &AttachmentSetExpired{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *AttachmentSetExpired) Code() string {
+	return "AttachmentSetExpired"
+}
+
+// Message returns the exception's message.
+func (s *AttachmentSetExpired) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *AttachmentSetExpired) OrigErr() error {
+	return nil
+}
+
+func (s *AttachmentSetExpired) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *AttachmentSetExpired) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *AttachmentSetExpired) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
+// An attachment set with the specified ID could not be found.
+type AttachmentSetIdNotFound struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// An attachment set with the specified ID could not be found.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentSetIdNotFound) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentSetIdNotFound) GoString() string {
+	return s.String()
+}
+
+func newErrorAttachmentSetIdNotFound(v protocol.ResponseMetadata) error {
+	return &AttachmentSetIdNotFound{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *AttachmentSetIdNotFound) Code() string {
+	return "AttachmentSetIdNotFound"
+}
+
+// Message returns the exception's message.
+func (s *AttachmentSetIdNotFound) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *AttachmentSetIdNotFound) OrigErr() error {
+	return nil
+}
+
+func (s *AttachmentSetIdNotFound) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *AttachmentSetIdNotFound) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *AttachmentSetIdNotFound) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
+// A limit for the size of an attachment set has been exceeded. The limits are
+// three attachments and 5 MB per attachment.
+type AttachmentSetSizeLimitExceeded struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// A limit for the size of an attachment set has been exceeded. The limits are
+	// three attachments and 5 MB per attachment.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentSetSizeLimitExceeded) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttachmentSetSizeLimitExceeded) GoString() string {
+	return s.String()
+}
+
+func newErrorAttachmentSetSizeLimitExceeded(v protocol.ResponseMetadata) error {
+	return &AttachmentSetSizeLimitExceeded{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *AttachmentSetSizeLimitExceeded) Code() string {
+	return "AttachmentSetSizeLimitExceeded"
+}
+
+// Message returns the exception's message.
+func (s *AttachmentSetSizeLimitExceeded) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *AttachmentSetSizeLimitExceeded) OrigErr() error {
+	return nil
+}
+
+func (s *AttachmentSetSizeLimitExceeded) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *AttachmentSetSizeLimitExceeded) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *AttachmentSetSizeLimitExceeded) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
+// The case creation limit for the account has been exceeded.
+type CaseCreationLimitExceeded struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// An error message that indicates that you have exceeded the number of cases
+	// you can have open.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CaseCreationLimitExceeded) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CaseCreationLimitExceeded) GoString() string {
+	return s.String()
+}
+
+func newErrorCaseCreationLimitExceeded(v protocol.ResponseMetadata) error {
+	return &CaseCreationLimitExceeded{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *CaseCreationLimitExceeded) Code() string {
+	return "CaseCreationLimitExceeded"
+}
+
+// Message returns the exception's message.
+func (s *CaseCreationLimitExceeded) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *CaseCreationLimitExceeded) OrigErr() error {
+	return nil
+}
+
+func (s *CaseCreationLimitExceeded) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *CaseCreationLimitExceeded) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *CaseCreationLimitExceeded) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
 // A JSON-formatted object that contains the metadata for a support case. It
-// is contained the response from a DescribeCases request. CaseDetails contains
+// is contained in the response from a DescribeCases request. CaseDetails contains
 // the following fields:
 //
-//    * caseId. The AWS Support case ID requested or returned in the call. The
-//    case ID is an alphanumeric string formatted as shown in this example:
-//    case-12345678910-2013-c4c1d2bf33c5cf47.
+//   - caseId - The support case ID requested or returned in the call. The
+//     case ID is an alphanumeric string formatted as shown in this example:
+//     case-12345678910-2013-c4c1d2bf33c5cf47.
 //
-//    * categoryCode. The category of problem for the AWS Support case. Corresponds
-//    to the CategoryCode values returned by a call to DescribeServices.
+//   - categoryCode - The category of problem for the support case. Corresponds
+//     to the CategoryCode values returned by a call to DescribeServices.
 //
-//    * displayId. The identifier for the case on pages in the AWS Support Center.
+//   - displayId - The identifier for the case on pages in the Amazon Web Services
+//     Support Center.
 //
-//    * language. The ISO 639-1 code for the language in which AWS provides
-//    support. AWS Support currently supports English ("en") and Japanese ("ja").
-//    Language parameters must be passed explicitly for operations that take
-//    them.
+//   - language - The ISO 639-1 code for the language in which Amazon Web Services
+//     provides support. Amazon Web Services Support currently supports English
+//     ("en") and Japanese ("ja"). Language parameters must be passed explicitly
+//     for operations that take them.
 //
-//    * recentCommunications. One or more Communication objects. Fields of these
-//    objects are attachments, body, caseId, submittedBy, and timeCreated.
+//   - nextToken - A resumption point for pagination.
 //
-//    * nextToken. A resumption point for pagination.
+//   - recentCommunications - One or more Communication objects. Fields of
+//     these objects are attachments, body, caseId, submittedBy, and timeCreated.
 //
-//    * serviceCode. The identifier for the AWS service that corresponds to
-//    the service code defined in the call to DescribeServices.
+//   - serviceCode - The identifier for the Amazon Web Services service that
+//     corresponds to the service code defined in the call to DescribeServices.
 //
-//    * severityCode. The severity code assigned to the case. Contains one of
-//    the values returned by the call to DescribeSeverityLevels.
+//   - severityCode - The severity code assigned to the case. Contains one
+//     of the values returned by the call to DescribeSeverityLevels. The possible
+//     values are: low, normal, high, urgent, and critical.
 //
-//    * status. The status of the case in the AWS Support Center.
+//   - status - The status of the case in the Amazon Web Services Support Center.
+//     Valid values: opened pending-customer-action reopened resolved unassigned
+//     work-in-progress
 //
-//    * subject. The subject line of the case.
+//   - subject - The subject line of the case.
 //
-//    * submittedBy. The email address of the account that submitted the case.
+//   - submittedBy - The email address of the account that submitted the case.
 //
-//    * timeCreated. The time the case was created, in ISO-8601 format.
+//   - timeCreated - The time the case was created, in ISO-8601 format.
 type CaseDetails struct {
 	_ struct{} `type:"structure"`
 
-	// The AWS Support case ID requested or returned in the call. The case ID is
-	// an alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
+	// The support case ID requested or returned in the call. The case ID is an
+	// alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
 	CaseId *string `locationName:"caseId" type:"string"`
 
-	// The category of problem for the AWS Support case.
+	// The category of problem for the support case.
 	CategoryCode *string `locationName:"categoryCode" type:"string"`
 
 	// The email addresses that receive copies of communication about the case.
 	CcEmailAddresses []*string `locationName:"ccEmailAddresses" type:"list"`
 
-	// The ID displayed for the case in the AWS Support Center. This is a numeric
-	// string.
+	// The ID displayed for the case in the Amazon Web Services Support Center.
+	// This is a numeric string.
 	DisplayId *string `locationName:"displayId" type:"string"`
 
-	// The ISO 639-1 code for the language in which AWS provides support. AWS Support
-	// currently supports English ("en") and Japanese ("ja"). Language parameters
-	// must be passed explicitly for operations that take them.
+	// The ISO 639-1 code for the language in which Amazon Web Services provides
+	// support. Amazon Web Services Support currently supports English ("en") and
+	// Japanese ("ja"). Language parameters must be passed explicitly for operations
+	// that take them.
 	Language *string `locationName:"language" type:"string"`
 
-	// The five most recent communications between you and AWS Support Center, including
-	// the IDs of any attachments to the communications. Also includes a nextToken
-	// that you can use to retrieve earlier communications.
+	// The five most recent communications between you and Amazon Web Services Support
+	// Center, including the IDs of any attachments to the communications. Also
+	// includes a nextToken that you can use to retrieve earlier communications.
 	RecentCommunications *RecentCaseCommunications `locationName:"recentCommunications" type:"structure"`
 
-	// The code for the AWS service returned by the call to DescribeServices.
+	// The code for the Amazon Web Services service. You can get a list of codes
+	// and the corresponding service names by calling DescribeServices.
 	ServiceCode *string `locationName:"serviceCode" type:"string"`
 
 	// The code for the severity level returned by the call to DescribeSeverityLevels.
 	SeverityCode *string `locationName:"severityCode" type:"string"`
 
 	// The status of the case.
+	//
+	// Valid values:
+	//
+	//    * opened
+	//
+	//    * pending-customer-action
+	//
+	//    * reopened
+	//
+	//    * resolved
+	//
+	//    * unassigned
+	//
+	//    * work-in-progress
 	Status *string `locationName:"status" type:"string"`
 
-	// The subject line for the case in the AWS Support Center.
+	// The subject line for the case in the Amazon Web Services Support Center.
 	Subject *string `locationName:"subject" type:"string"`
 
 	// The email address of the account that submitted the case.
 	SubmittedBy *string `locationName:"submittedBy" type:"string"`
 
-	// The time that the case was case created in the AWS Support Center.
+	// The time that the case was created in the Amazon Web Services Support Center.
 	TimeCreated *string `locationName:"timeCreated" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CaseDetails) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CaseDetails) GoString() string {
 	return s.String()
 }
@@ -1837,9 +2396,74 @@ func (s *CaseDetails) SetTimeCreated(v string) *CaseDetails {
 	return s
 }
 
+// The requested caseId couldn't be located.
+type CaseIdNotFound struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// The requested CaseId could not be located.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CaseIdNotFound) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CaseIdNotFound) GoString() string {
+	return s.String()
+}
+
+func newErrorCaseIdNotFound(v protocol.ResponseMetadata) error {
+	return &CaseIdNotFound{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *CaseIdNotFound) Code() string {
+	return "CaseIdNotFound"
+}
+
+// Message returns the exception's message.
+func (s *CaseIdNotFound) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *CaseIdNotFound) OrigErr() error {
+	return nil
+}
+
+func (s *CaseIdNotFound) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *CaseIdNotFound) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *CaseIdNotFound) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
 // A JSON-formatted name/value pair that represents the category name and category
 // code of the problem, selected from the DescribeServices response for each
-// AWS service.
+// Amazon Web Services service.
 type Category struct {
 	_ struct{} `type:"structure"`
 
@@ -1850,12 +2474,20 @@ type Category struct {
 	Name *string `locationName:"name" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Category) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Category) GoString() string {
 	return s.String()
 }
@@ -1872,35 +2504,48 @@ func (s *Category) SetName(v string) *Category {
 	return s
 }
 
-// A communication associated with an AWS Support case. The communication consists
-// of the case ID, the message body, attachment information, the account email
-// address, and the date and time of the communication.
+// A communication associated with a support case. The communication consists
+// of the case ID, the message body, attachment information, the submitter of
+// the communication, and the date and time of the communication.
 type Communication struct {
 	_ struct{} `type:"structure"`
 
 	// Information about the attachments to the case communication.
 	AttachmentSet []*AttachmentDetails `locationName:"attachmentSet" type:"list"`
 
-	// The text of the communication between the customer and AWS Support.
+	// The text of the communication between the customer and Amazon Web Services
+	// Support.
 	Body *string `locationName:"body" min:"1" type:"string"`
 
-	// The AWS Support case ID requested or returned in the call. The case ID is
-	// an alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
+	// The support case ID requested or returned in the call. The case ID is an
+	// alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
 	CaseId *string `locationName:"caseId" type:"string"`
 
-	// The email address of the account that submitted the AWS Support case.
+	// The identity of the account that submitted, or responded to, the support
+	// case. Customer entries include the role or IAM user as well as the email
+	// address. For example, "AdminRole (Role) <janedoe@example.com>. Entries from
+	// the Amazon Web Services Support team display "Amazon Web Services," and don't
+	// show an email address.
 	SubmittedBy *string `locationName:"submittedBy" type:"string"`
 
 	// The time the communication was created.
 	TimeCreated *string `locationName:"timeCreated" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Communication) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Communication) GoString() string {
 	return s.String()
 }
@@ -1939,52 +2584,74 @@ type CreateCaseInput struct {
 	_ struct{} `type:"structure"`
 
 	// The ID of a set of one or more attachments for the case. Create the set by
-	// using AddAttachmentsToSet.
+	// using the AddAttachmentsToSet operation.
 	AttachmentSetId *string `locationName:"attachmentSetId" type:"string"`
 
-	// The category of problem for the AWS Support case.
+	// The category of problem for the support case. You also use the DescribeServices
+	// operation to get the category code for a service. Each Amazon Web Services
+	// service defines its own set of category codes.
 	CategoryCode *string `locationName:"categoryCode" type:"string"`
 
-	// A list of email addresses that AWS Support copies on case correspondence.
+	// A list of email addresses that Amazon Web Services Support copies on case
+	// correspondence. Amazon Web Services Support identifies the account that creates
+	// the case when you specify your Amazon Web Services credentials in an HTTP
+	// POST method or use the Amazon Web Services SDKs (http://aws.amazon.com/tools/).
 	CcEmailAddresses []*string `locationName:"ccEmailAddresses" type:"list"`
 
-	// The communication body text when you create an AWS Support case by calling
-	// CreateCase.
+	// The communication body text that describes the issue. This text appears in
+	// the Description field on the Amazon Web Services Support Center Create Case
+	// (https://console.aws.amazon.com/support/home#/case/create) page.
 	//
 	// CommunicationBody is a required field
 	CommunicationBody *string `locationName:"communicationBody" min:"1" type:"string" required:"true"`
 
-	// The type of issue for the case. You can specify either "customer-service"
-	// or "technical." If you do not indicate a value, the default is "technical."
+	// The type of issue for the case. You can specify customer-service or technical.
+	// If you don't specify a value, the default is technical.
 	IssueType *string `locationName:"issueType" type:"string"`
 
-	// The ISO 639-1 code for the language in which AWS provides support. AWS Support
-	// currently supports English ("en") and Japanese ("ja"). Language parameters
-	// must be passed explicitly for operations that take them.
+	// The language in which Amazon Web Services Support handles the case. You must
+	// specify the ISO 639-1 code for the language parameter if you want support
+	// in that language. Currently, English ("en") and Japanese ("ja") are supported.
 	Language *string `locationName:"language" type:"string"`
 
-	// The code for the AWS service returned by the call to DescribeServices.
+	// The code for the Amazon Web Services service. You can use the DescribeServices
+	// operation to get the possible serviceCode values.
 	ServiceCode *string `locationName:"serviceCode" type:"string"`
 
-	// The code for the severity level returned by the call to DescribeSeverityLevels.
+	// A value that indicates the urgency of the case. This value determines the
+	// response time according to your service level agreement with Amazon Web Services
+	// Support. You can use the DescribeSeverityLevels operation to get the possible
+	// values for severityCode.
 	//
-	// The availability of severity levels depends on each customer's support subscription.
-	// In other words, your subscription may not necessarily require the urgent
-	// level of response time.
+	// For more information, see SeverityLevel and Choosing a Severity (https://docs.aws.amazon.com/awssupport/latest/user/getting-started.html#choosing-severity)
+	// in the Amazon Web Services Support User Guide.
+	//
+	// The availability of severity levels depends on the support plan for the Amazon
+	// Web Services account.
 	SeverityCode *string `locationName:"severityCode" type:"string"`
 
-	// The title of the AWS Support case.
+	// The title of the support case. The title appears in the Subject field on
+	// the Amazon Web Services Support Center Create Case (https://console.aws.amazon.com/support/home#/case/create)
+	// page.
 	//
 	// Subject is a required field
 	Subject *string `locationName:"subject" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCaseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCaseInput) GoString() string {
 	return s.String()
 }
@@ -2062,22 +2729,30 @@ func (s *CreateCaseInput) SetSubject(v string) *CreateCaseInput {
 	return s
 }
 
-// The AWS Support case ID returned by a successful completion of the CreateCase
+// The support case ID returned by a successful completion of the CreateCase
 // operation.
 type CreateCaseOutput struct {
 	_ struct{} `type:"structure"`
 
-	// The AWS Support case ID requested or returned in the call. The case ID is
-	// an alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
+	// The support case ID requested or returned in the call. The case ID is an
+	// alphanumeric string in the following format: case-12345678910-2013-c4c1d2bf33c5cf47
 	CaseId *string `locationName:"caseId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCaseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCaseOutput) GoString() string {
 	return s.String()
 }
@@ -2098,12 +2773,20 @@ type DescribeAttachmentInput struct {
 	AttachmentId *string `locationName:"attachmentId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAttachmentInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAttachmentInput) GoString() string {
 	return s.String()
 }
@@ -2127,21 +2810,100 @@ func (s *DescribeAttachmentInput) SetAttachmentId(v string) *DescribeAttachmentI
 	return s
 }
 
+// The limit for the number of DescribeAttachment requests in a short period
+// of time has been exceeded.
+type DescribeAttachmentLimitExceeded struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// The limit for the number of DescribeAttachment requests in a short period
+	// of time has been exceeded.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeAttachmentLimitExceeded) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeAttachmentLimitExceeded) GoString() string {
+	return s.String()
+}
+
+func newErrorDescribeAttachmentLimitExceeded(v protocol.ResponseMetadata) error {
+	return &DescribeAttachmentLimitExceeded{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *DescribeAttachmentLimitExceeded) Code() string {
+	return "DescribeAttachmentLimitExceeded"
+}
+
+// Message returns the exception's message.
+func (s *DescribeAttachmentLimitExceeded) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *DescribeAttachmentLimitExceeded) OrigErr() error {
+	return nil
+}
+
+func (s *DescribeAttachmentLimitExceeded) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *DescribeAttachmentLimitExceeded) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *DescribeAttachmentLimitExceeded) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
 // The content and file name of the attachment returned by the DescribeAttachment
 // operation.
 type DescribeAttachmentOutput struct {
 	_ struct{} `type:"structure"`
 
-	// The attachment content and file name.
+	// This object includes the attachment content and file name.
+	//
+	// In the previous response syntax, the value for the data parameter appears
+	// as blob, which is represented as a base64-encoded string. The value for fileName
+	// is the name of the attachment, such as troubleshoot-screenshot.png.
 	Attachment *Attachment `locationName:"attachment" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAttachmentOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAttachmentOutput) GoString() string {
 	return s.String()
 }
@@ -2167,20 +2929,22 @@ type DescribeCasesInput struct {
 	// number of cases is 100.
 	CaseIdList []*string `locationName:"caseIdList" type:"list"`
 
-	// The ID displayed for a case in the AWS Support Center user interface.
+	// The ID displayed for a case in the Amazon Web Services Support Center user
+	// interface.
 	DisplayId *string `locationName:"displayId" type:"string"`
 
-	// Specifies whether communications should be included in the DescribeCases
-	// results. The default is true.
+	// Specifies whether to include communications in the DescribeCases response.
+	// By default, communications are included.
 	IncludeCommunications *bool `locationName:"includeCommunications" type:"boolean"`
 
-	// Specifies whether resolved support cases should be included in the DescribeCases
-	// results. The default is false.
+	// Specifies whether to include resolved support cases in the DescribeCases
+	// response. By default, resolved cases aren't included.
 	IncludeResolvedCases *bool `locationName:"includeResolvedCases" type:"boolean"`
 
-	// The ISO 639-1 code for the language in which AWS provides support. AWS Support
-	// currently supports English ("en") and Japanese ("ja"). Language parameters
-	// must be passed explicitly for operations that take them.
+	// The ISO 639-1 code for the language in which Amazon Web Services provides
+	// support. Amazon Web Services Support currently supports English ("en") and
+	// Japanese ("ja"). Language parameters must be passed explicitly for operations
+	// that take them.
 	Language *string `locationName:"language" type:"string"`
 
 	// The maximum number of results to return before paginating.
@@ -2190,12 +2954,20 @@ type DescribeCasesInput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCasesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCasesInput) GoString() string {
 	return s.String()
 }
@@ -2267,8 +3039,9 @@ func (s *DescribeCasesInput) SetNextToken(v string) *DescribeCasesInput {
 	return s
 }
 
-// Returns an array of CaseDetails objects and a nextToken that defines a point
-// for pagination in the result set.
+// Returns an array of CaseDetails (https://docs.aws.amazon.com/awssupport/latest/APIReference/API_CaseDetails.html)
+// objects and a nextToken that defines a point for pagination in the result
+// set.
 type DescribeCasesOutput struct {
 	_ struct{} `type:"structure"`
 
@@ -2279,12 +3052,20 @@ type DescribeCasesOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCasesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCasesOutput) GoString() string {
 	return s.String()
 }
@@ -2312,8 +3093,8 @@ type DescribeCommunicationsInput struct {
 	// communications are available for 12 months after creation.
 	BeforeTime *string `locationName:"beforeTime" type:"string"`
 
-	// The AWS Support case ID requested or returned in the call. The case ID is
-	// an alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
+	// The support case ID requested or returned in the call. The case ID is an
+	// alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
 	//
 	// CaseId is a required field
 	CaseId *string `locationName:"caseId" type:"string" required:"true"`
@@ -2325,12 +3106,20 @@ type DescribeCommunicationsInput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCommunicationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCommunicationsInput) GoString() string {
 	return s.String()
 }
@@ -2392,12 +3181,20 @@ type DescribeCommunicationsOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCommunicationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCommunicationsOutput) GoString() string {
 	return s.String()
 }
@@ -2417,21 +3214,31 @@ func (s *DescribeCommunicationsOutput) SetNextToken(v string) *DescribeCommunica
 type DescribeServicesInput struct {
 	_ struct{} `type:"structure"`
 
-	// The ISO 639-1 code for the language in which AWS provides support. AWS Support
-	// currently supports English ("en") and Japanese ("ja"). Language parameters
-	// must be passed explicitly for operations that take them.
+	// The ISO 639-1 code for the language in which Amazon Web Services provides
+	// support. Amazon Web Services Support currently supports English ("en") and
+	// Japanese ("ja"). Language parameters must be passed explicitly for operations
+	// that take them.
 	Language *string `locationName:"language" type:"string"`
 
-	// A JSON-formatted list of service codes available for AWS services.
+	// A JSON-formatted list of service codes available for Amazon Web Services
+	// services.
 	ServiceCodeList []*string `locationName:"serviceCodeList" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeServicesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeServicesInput) GoString() string {
 	return s.String()
 }
@@ -2448,20 +3255,29 @@ func (s *DescribeServicesInput) SetServiceCodeList(v []*string) *DescribeService
 	return s
 }
 
-// The list of AWS services returned by the DescribeServices operation.
+// The list of Amazon Web Services services returned by the DescribeServices
+// operation.
 type DescribeServicesOutput struct {
 	_ struct{} `type:"structure"`
 
-	// A JSON-formatted list of AWS services.
+	// A JSON-formatted list of Amazon Web Services services.
 	Services []*Service `locationName:"services" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeServicesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeServicesOutput) GoString() string {
 	return s.String()
 }
@@ -2475,18 +3291,27 @@ func (s *DescribeServicesOutput) SetServices(v []*Service) *DescribeServicesOutp
 type DescribeSeverityLevelsInput struct {
 	_ struct{} `type:"structure"`
 
-	// The ISO 639-1 code for the language in which AWS provides support. AWS Support
-	// currently supports English ("en") and Japanese ("ja"). Language parameters
-	// must be passed explicitly for operations that take them.
+	// The ISO 639-1 code for the language in which Amazon Web Services provides
+	// support. Amazon Web Services Support currently supports English ("en") and
+	// Japanese ("ja"). Language parameters must be passed explicitly for operations
+	// that take them.
 	Language *string `locationName:"language" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSeverityLevelsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSeverityLevelsInput) GoString() string {
 	return s.String()
 }
@@ -2502,16 +3327,24 @@ type DescribeSeverityLevelsOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The available severity levels for the support case. Available severity levels
-	// are defined by your service level agreement with AWS.
+	// are defined by your service level agreement with Amazon Web Services.
 	SeverityLevels []*SeverityLevel `locationName:"severityLevels" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSeverityLevelsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSeverityLevelsOutput) GoString() string {
 	return s.String()
 }
@@ -2525,20 +3358,29 @@ func (s *DescribeSeverityLevelsOutput) SetSeverityLevels(v []*SeverityLevel) *De
 type DescribeTrustedAdvisorCheckRefreshStatusesInput struct {
 	_ struct{} `type:"structure"`
 
-	// The IDs of the Trusted Advisor checks to get the status of. Note: Specifying
-	// the check ID of a check that is automatically refreshed causes an InvalidParameterValue
-	// error.
+	// The IDs of the Trusted Advisor checks to get the status.
+	//
+	// If you specify the check ID of a check that is automatically refreshed, you
+	// might see an InvalidParameterValue error.
 	//
 	// CheckIds is a required field
 	CheckIds []*string `locationName:"checkIds" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckRefreshStatusesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckRefreshStatusesInput) GoString() string {
 	return s.String()
 }
@@ -2573,12 +3415,20 @@ type DescribeTrustedAdvisorCheckRefreshStatusesOutput struct {
 	Statuses []*TrustedAdvisorCheckRefreshStatus `locationName:"statuses" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckRefreshStatusesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckRefreshStatusesOutput) GoString() string {
 	return s.String()
 }
@@ -2597,18 +3447,27 @@ type DescribeTrustedAdvisorCheckResultInput struct {
 	// CheckId is a required field
 	CheckId *string `locationName:"checkId" type:"string" required:"true"`
 
-	// The ISO 639-1 code for the language in which AWS provides support. AWS Support
-	// currently supports English ("en") and Japanese ("ja"). Language parameters
-	// must be passed explicitly for operations that take them.
+	// The ISO 639-1 code for the language in which Amazon Web Services provides
+	// support. Amazon Web Services Support currently supports English ("en") and
+	// Japanese ("ja"). Language parameters must be passed explicitly for operations
+	// that take them.
 	Language *string `locationName:"language" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckResultInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckResultInput) GoString() string {
 	return s.String()
 }
@@ -2647,12 +3506,20 @@ type DescribeTrustedAdvisorCheckResultOutput struct {
 	Result *TrustedAdvisorCheckResult `locationName:"result" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckResultOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckResultOutput) GoString() string {
 	return s.String()
 }
@@ -2672,12 +3539,20 @@ type DescribeTrustedAdvisorCheckSummariesInput struct {
 	CheckIds []*string `locationName:"checkIds" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckSummariesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckSummariesInput) GoString() string {
 	return s.String()
 }
@@ -2712,12 +3587,20 @@ type DescribeTrustedAdvisorCheckSummariesOutput struct {
 	Summaries []*TrustedAdvisorCheckSummary `locationName:"summaries" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckSummariesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorCheckSummariesOutput) GoString() string {
 	return s.String()
 }
@@ -2731,20 +3614,29 @@ func (s *DescribeTrustedAdvisorCheckSummariesOutput) SetSummaries(v []*TrustedAd
 type DescribeTrustedAdvisorChecksInput struct {
 	_ struct{} `type:"structure"`
 
-	// The ISO 639-1 code for the language in which AWS provides support. AWS Support
-	// currently supports English ("en") and Japanese ("ja"). Language parameters
-	// must be passed explicitly for operations that take them.
+	// The ISO 639-1 code for the language in which Amazon Web Services provides
+	// support. Amazon Web Services Support currently supports English ("en") and
+	// Japanese ("ja"). Language parameters must be passed explicitly for operations
+	// that take them.
 	//
 	// Language is a required field
 	Language *string `locationName:"language" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorChecksInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorChecksInput) GoString() string {
 	return s.String()
 }
@@ -2779,12 +3671,20 @@ type DescribeTrustedAdvisorChecksOutput struct {
 	Checks []*TrustedAdvisorCheckDescription `locationName:"checks" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorChecksOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTrustedAdvisorChecksOutput) GoString() string {
 	return s.String()
 }
@@ -2793,6 +3693,71 @@ func (s DescribeTrustedAdvisorChecksOutput) GoString() string {
 func (s *DescribeTrustedAdvisorChecksOutput) SetChecks(v []*TrustedAdvisorCheckDescription) *DescribeTrustedAdvisorChecksOutput {
 	s.Checks = v
 	return s
+}
+
+// An internal server error occurred.
+type InternalServerError struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// An internal server error occurred.
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s InternalServerError) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s InternalServerError) GoString() string {
+	return s.String()
+}
+
+func newErrorInternalServerError(v protocol.ResponseMetadata) error {
+	return &InternalServerError{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *InternalServerError) Code() string {
+	return "InternalServerError"
+}
+
+// Message returns the exception's message.
+func (s *InternalServerError) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *InternalServerError) OrigErr() error {
+	return nil
+}
+
+func (s *InternalServerError) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *InternalServerError) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *InternalServerError) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 // The five most recent communications associated with the case.
@@ -2806,12 +3771,20 @@ type RecentCaseCommunications struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RecentCaseCommunications) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RecentCaseCommunications) GoString() string {
 	return s.String()
 }
@@ -2831,20 +3804,29 @@ func (s *RecentCaseCommunications) SetNextToken(v string) *RecentCaseCommunicati
 type RefreshTrustedAdvisorCheckInput struct {
 	_ struct{} `type:"structure"`
 
-	// The unique identifier for the Trusted Advisor check to refresh. Note: Specifying
-	// the check ID of a check that is automatically refreshed causes an InvalidParameterValue
-	// error.
+	// The unique identifier for the Trusted Advisor check to refresh.
+	//
+	// Specifying the check ID of a check that is automatically refreshed causes
+	// an InvalidParameterValue error.
 	//
 	// CheckId is a required field
 	CheckId *string `locationName:"checkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RefreshTrustedAdvisorCheckInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RefreshTrustedAdvisorCheckInput) GoString() string {
 	return s.String()
 }
@@ -2879,12 +3861,20 @@ type RefreshTrustedAdvisorCheckOutput struct {
 	Status *TrustedAdvisorCheckRefreshStatus `locationName:"status" type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RefreshTrustedAdvisorCheckOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RefreshTrustedAdvisorCheckOutput) GoString() string {
 	return s.String()
 }
@@ -2898,17 +3888,25 @@ func (s *RefreshTrustedAdvisorCheckOutput) SetStatus(v *TrustedAdvisorCheckRefre
 type ResolveCaseInput struct {
 	_ struct{} `type:"structure"`
 
-	// The AWS Support case ID requested or returned in the call. The case ID is
-	// an alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
+	// The support case ID requested or returned in the call. The case ID is an
+	// alphanumeric string formatted as shown in this example: case-12345678910-2013-c4c1d2bf33c5cf47
 	CaseId *string `locationName:"caseId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResolveCaseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResolveCaseInput) GoString() string {
 	return s.String()
 }
@@ -2930,12 +3928,20 @@ type ResolveCaseOutput struct {
 	InitialCaseStatus *string `locationName:"initialCaseStatus" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResolveCaseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResolveCaseOutput) GoString() string {
 	return s.String()
 }
@@ -2952,30 +3958,39 @@ func (s *ResolveCaseOutput) SetInitialCaseStatus(v string) *ResolveCaseOutput {
 	return s
 }
 
-// Information about an AWS service returned by the DescribeServices operation.
+// Information about an Amazon Web Services service returned by the DescribeServices
+// operation.
 type Service struct {
 	_ struct{} `type:"structure"`
 
 	// A list of categories that describe the type of support issue a case describes.
 	// Categories consist of a category name and a category code. Category names
-	// and codes are passed to AWS Support when you call CreateCase.
+	// and codes are passed to Amazon Web Services Support when you call CreateCase.
 	Categories []*Category `locationName:"categories" type:"list"`
 
-	// The code for an AWS service returned by the DescribeServices response. The
-	// name element contains the corresponding friendly name.
+	// The code for an Amazon Web Services service returned by the DescribeServices
+	// response. The name element contains the corresponding friendly name.
 	Code *string `locationName:"code" type:"string"`
 
-	// The friendly name for an AWS service. The code element contains the corresponding
-	// code.
+	// The friendly name for an Amazon Web Services service. The code element contains
+	// the corresponding code.
 	Name *string `locationName:"name" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Service) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Service) GoString() string {
 	return s.String()
 }
@@ -2998,25 +4013,55 @@ func (s *Service) SetName(v string) *Service {
 	return s
 }
 
-// A code and name pair that represent a severity level that can be applied
-// to a support case.
+// A code and name pair that represents the severity level of a support case.
+// The available values depend on the support plan for the account. For more
+// information, see Choosing a severity (https://docs.aws.amazon.com/awssupport/latest/user/case-management.html#choosing-severity)
+// in the Amazon Web Services Support User Guide.
 type SeverityLevel struct {
 	_ struct{} `type:"structure"`
 
-	// One of four values: "low," "medium," "high," and "urgent". These values correspond
-	// to response times returned to the caller in severityLevel.name.
+	// The code for case severity level.
+	//
+	// Valid values: low | normal | high | urgent | critical
 	Code *string `locationName:"code" type:"string"`
 
 	// The name of the severity level that corresponds to the severity level code.
+	//
+	// The values returned by the API are different from the values that appear
+	// in the Amazon Web Services Support Center. For example, the API uses the
+	// code low, but the name appears as General guidance in Support Center.
+	//
+	// The following are the API code names and how they appear in the console:
+	//
+	//    * low - General guidance
+	//
+	//    * normal - System impaired
+	//
+	//    * high - Production system impaired
+	//
+	//    * urgent - Production system down
+	//
+	//    * critical - Business-critical system down
+	//
+	// For more information, see Choosing a severity (https://docs.aws.amazon.com/awssupport/latest/user/case-management.html#choosing-severity)
+	// in the Amazon Web Services Support User Guide.
 	Name *string `locationName:"name" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SeverityLevel) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SeverityLevel) GoString() string {
 	return s.String()
 }
@@ -3043,12 +4088,20 @@ type TrustedAdvisorCategorySpecificSummary struct {
 	CostOptimizing *TrustedAdvisorCostOptimizingSummary `locationName:"costOptimizing" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCategorySpecificSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCategorySpecificSummary) GoString() string {
 	return s.String()
 }
@@ -3069,7 +4122,7 @@ type TrustedAdvisorCheckDescription struct {
 	Category *string `locationName:"category" type:"string" required:"true"`
 
 	// The description of the Trusted Advisor check, which includes the alert criteria
-	// and recommended actions (contains HTML markup).
+	// and recommended operations (contains HTML markup).
 	//
 	// Description is a required field
 	Description *string `locationName:"description" type:"string" required:"true"`
@@ -3094,12 +4147,20 @@ type TrustedAdvisorCheckDescription struct {
 	Name *string `locationName:"name" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCheckDescription) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCheckDescription) GoString() string {
 	return s.String()
 }
@@ -3150,18 +4211,37 @@ type TrustedAdvisorCheckRefreshStatus struct {
 	MillisUntilNextRefreshable *int64 `locationName:"millisUntilNextRefreshable" type:"long" required:"true"`
 
 	// The status of the Trusted Advisor check for which a refresh has been requested:
-	// "none", "enqueued", "processing", "success", or "abandoned".
+	//
+	//    * none - The check is not refreshed or the non-success status exceeds
+	//    the timeout
+	//
+	//    * enqueued - The check refresh requests has entered the refresh queue
+	//
+	//    * processing - The check refresh request is picked up by the rule processing
+	//    engine
+	//
+	//    * success - The check is successfully refreshed
+	//
+	//    * abandoned - The check refresh has failed
 	//
 	// Status is a required field
 	Status *string `locationName:"status" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCheckRefreshStatus) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCheckRefreshStatus) GoString() string {
 	return s.String()
 }
@@ -3204,8 +4284,8 @@ type TrustedAdvisorCheckResult struct {
 	// FlaggedResources is a required field
 	FlaggedResources []*TrustedAdvisorResourceDetail `locationName:"flaggedResources" type:"list" required:"true"`
 
-	// Details about AWS resources that were analyzed in a call to Trusted Advisor
-	// DescribeTrustedAdvisorCheckSummaries.
+	// Details about Amazon Web Services resources that were analyzed in a call
+	// to Trusted Advisor DescribeTrustedAdvisorCheckSummaries.
 	//
 	// ResourcesSummary is a required field
 	ResourcesSummary *TrustedAdvisorResourcesSummary `locationName:"resourcesSummary" type:"structure" required:"true"`
@@ -3222,12 +4302,20 @@ type TrustedAdvisorCheckResult struct {
 	Timestamp *string `locationName:"timestamp" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCheckResult) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCheckResult) GoString() string {
 	return s.String()
 }
@@ -3287,8 +4375,8 @@ type TrustedAdvisorCheckSummary struct {
 	// Specifies whether the Trusted Advisor check has flagged resources.
 	HasFlaggedResources *bool `locationName:"hasFlaggedResources" type:"boolean"`
 
-	// Details about AWS resources that were analyzed in a call to Trusted Advisor
-	// DescribeTrustedAdvisorCheckSummaries.
+	// Details about Amazon Web Services resources that were analyzed in a call
+	// to Trusted Advisor DescribeTrustedAdvisorCheckSummaries.
 	//
 	// ResourcesSummary is a required field
 	ResourcesSummary *TrustedAdvisorResourcesSummary `locationName:"resourcesSummary" type:"structure" required:"true"`
@@ -3305,12 +4393,20 @@ type TrustedAdvisorCheckSummary struct {
 	Timestamp *string `locationName:"timestamp" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCheckSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCheckSummary) GoString() string {
 	return s.String()
 }
@@ -3351,30 +4447,38 @@ func (s *TrustedAdvisorCheckSummary) SetTimestamp(v string) *TrustedAdvisorCheck
 	return s
 }
 
-// The estimated cost savings that might be realized if the recommended actions
+// The estimated cost savings that might be realized if the recommended operations
 // are taken.
 type TrustedAdvisorCostOptimizingSummary struct {
 	_ struct{} `type:"structure"`
 
-	// The estimated monthly savings that might be realized if the recommended actions
+	// The estimated monthly savings that might be realized if the recommended operations
 	// are taken.
 	//
 	// EstimatedMonthlySavings is a required field
 	EstimatedMonthlySavings *float64 `locationName:"estimatedMonthlySavings" type:"double" required:"true"`
 
 	// The estimated percentage of savings that might be realized if the recommended
-	// actions are taken.
+	// operations are taken.
 	//
 	// EstimatedPercentMonthlySavings is a required field
 	EstimatedPercentMonthlySavings *float64 `locationName:"estimatedPercentMonthlySavings" type:"double" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCostOptimizingSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorCostOptimizingSummary) GoString() string {
 	return s.String()
 }
@@ -3395,8 +4499,8 @@ func (s *TrustedAdvisorCostOptimizingSummary) SetEstimatedPercentMonthlySavings(
 type TrustedAdvisorResourceDetail struct {
 	_ struct{} `type:"structure"`
 
-	// Specifies whether the AWS resource was ignored by Trusted Advisor because
-	// it was marked as suppressed by the user.
+	// Specifies whether the Amazon Web Services resource was ignored by Trusted
+	// Advisor because it was marked as suppressed by the user.
 	IsSuppressed *bool `locationName:"isSuppressed" type:"boolean"`
 
 	// Additional information about the identified resource. The exact metadata
@@ -3408,7 +4512,7 @@ type TrustedAdvisorResourceDetail struct {
 	// Metadata is a required field
 	Metadata []*string `locationName:"metadata" type:"list" required:"true"`
 
-	// The AWS region in which the identified resource is located.
+	// The Amazon Web Services Region in which the identified resource is located.
 	Region *string `locationName:"region" type:"string"`
 
 	// The unique identifier for the identified resource.
@@ -3422,12 +4526,20 @@ type TrustedAdvisorResourceDetail struct {
 	Status *string `locationName:"status" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorResourceDetail) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorResourceDetail) GoString() string {
 	return s.String()
 }
@@ -3462,41 +4574,50 @@ func (s *TrustedAdvisorResourceDetail) SetStatus(v string) *TrustedAdvisorResour
 	return s
 }
 
-// Details about AWS resources that were analyzed in a call to Trusted Advisor
-// DescribeTrustedAdvisorCheckSummaries.
+// Details about Amazon Web Services resources that were analyzed in a call
+// to Trusted Advisor DescribeTrustedAdvisorCheckSummaries.
 type TrustedAdvisorResourcesSummary struct {
 	_ struct{} `type:"structure"`
 
-	// The number of AWS resources that were flagged (listed) by the Trusted Advisor
-	// check.
+	// The number of Amazon Web Services resources that were flagged (listed) by
+	// the Trusted Advisor check.
 	//
 	// ResourcesFlagged is a required field
 	ResourcesFlagged *int64 `locationName:"resourcesFlagged" type:"long" required:"true"`
 
-	// The number of AWS resources ignored by Trusted Advisor because information
-	// was unavailable.
+	// The number of Amazon Web Services resources ignored by Trusted Advisor because
+	// information was unavailable.
 	//
 	// ResourcesIgnored is a required field
 	ResourcesIgnored *int64 `locationName:"resourcesIgnored" type:"long" required:"true"`
 
-	// The number of AWS resources that were analyzed by the Trusted Advisor check.
+	// The number of Amazon Web Services resources that were analyzed by the Trusted
+	// Advisor check.
 	//
 	// ResourcesProcessed is a required field
 	ResourcesProcessed *int64 `locationName:"resourcesProcessed" type:"long" required:"true"`
 
-	// The number of AWS resources ignored by Trusted Advisor because they were
-	// marked as suppressed by the user.
+	// The number of Amazon Web Services resources ignored by Trusted Advisor because
+	// they were marked as suppressed by the user.
 	//
 	// ResourcesSuppressed is a required field
 	ResourcesSuppressed *int64 `locationName:"resourcesSuppressed" type:"long" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorResourcesSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedAdvisorResourcesSummary) GoString() string {
 	return s.String()
 }
